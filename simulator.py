@@ -64,8 +64,8 @@ class AlicaBot(object):
         plt.clf()
         fig = plt.gcf()
         fig.canvas.set_window_title(title)
-        ix = int(self.robot.x * self.simulator.pixels_per_meter)
-        iy = int(self.robot.y * self.simulator.pixels_per_meter)
+        ix = self.robot.x * self.simulator.pixels_per_meter
+        iy = self.robot.y * self.simulator.pixels_per_meter
         circle1 = plt.Circle((ix, self.simulator.map_height - iy - 1), self.size * self.simulator.pixels_per_meter, color='r')
         plt.imshow(self.simulator.map)
         plt.gca().add_artist(circle1)
@@ -99,11 +99,17 @@ class AlicaBot(object):
 
 
 class Simulator(object):
-    def __init__(self):
-        self.simulation_steps_per_meter = 100
-        self.simulation_steps_per_radian = 1.0 / math.radians(4)
-        self.map = misc.imread('map.png')
-        self.pixels_per_meter = 100
+    def __init__(self, small=True):
+        if small:
+            self.simulation_steps_per_meter = 10
+            self.map = misc.imread('map_small.png')
+            self.pixels_per_meter = 10
+            self.simulation_steps_per_radian = 1.0 / math.radians(4)
+        else:
+            self.simulation_steps_per_meter = 100
+            self.map = misc.imread('map.png')
+            self.pixels_per_meter = 100
+            self.simulation_steps_per_radian = 1.0 / math.radians(9)
         self.map_height, self.map_width, self.colors = self.map.shape
 
     def collides_circle(self, robot, circle_size):
