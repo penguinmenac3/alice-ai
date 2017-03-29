@@ -4,11 +4,12 @@ import threading
 import cv2
 import json
 import math
+import sys
 
 class NetworkRenderer(object):
     def __init__(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.connect(("pm-learn", 25555))
+        self.sock.connect((sys.argv[1], 25555))
         self.fsock = self.sock.makefile()
         self.bg = cv2.imread("map.png")
         self.img = None
