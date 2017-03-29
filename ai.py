@@ -95,6 +95,7 @@ class AI(object):
                     self.history.popleft()
             print("Start training, stop with CTRL + C")
             while True:
+                timing_start = time.time()
                 a_t = self.pick_action(self.epsilon)
                 if t <= self.initial_observe:
                     a_t = self.pick_action(1.0)
@@ -192,7 +193,9 @@ class AI(object):
                           remove.append(x)
                     for x in remove:
                         self.observers.remove(x)
-                    time.sleep(self.dt)
+                    elapsed_time = time.time() - timing_start
+                    sleep_time = max(0, self.dt - (elapsed_time))
+                    time.sleep(sleep_time)
                     #self.bot.visualize(self.ai_name, state1, 0.01)
         except KeyboardInterrupt:
             print("User Interrupt: end training.")
