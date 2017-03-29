@@ -1,5 +1,6 @@
 import simulator
 import ai
+import sys
 
 
 def main():
@@ -9,7 +10,10 @@ def main():
     Creates an ai and a simulator.
     Trains the ai with the simulator and saves ai state.
     """
-    my_simulator = simulator.Simulator()
+    small = False
+    if (len(sys.argv) > 1) and sys.argv[1] == "small":
+        small = True
+    my_simulator = simulator.Simulator(small)
     my_ai = ai.AI(my_simulator)
     my_ai.train()
     my_ai.save()

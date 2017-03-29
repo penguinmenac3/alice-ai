@@ -2,9 +2,6 @@ import numpy as np
 from scipy import misc
 import math
 import random
-import matplotlib.pyplot as plt
-plt.ion()
-
 
 class Sensor(object):
     def __init__(self, x, y, max_range, cone_width, heading):
@@ -28,8 +25,8 @@ class AlicaBot(object):
         sensors = [Sensor(0.12, 0.08, 2, math.radians(30), math.radians(45)),
                    Sensor(0.14, 0.04, 2, math.radians(30), math.radians(15)),
                    Sensor(0.14, -0.04, 2, math.radians(30), math.radians(-15)),
-                   Sensor(0.12, -0.08, 2, math.radians(30), math.radians(-45)),
-                   Sensor(-0.15, 0, 2, math.radians(30), math.radians(-180))]
+                   Sensor(0.12, -0.08, 2, math.radians(30), math.radians(-45))]#,
+                   #Sensor(-0.15, 0, 2, math.radians(30), math.radians(-180))]
         self.robot = Robot(x, y, heading, sensors)
         self.simulator = simulator
         self.wheel_distance = 0.2
@@ -40,6 +37,9 @@ class AlicaBot(object):
         for i in self.robot.sensors:
             measurements.append(self.simulator.sense_cone(self.robot, i))
         return measurements
+        
+    def get_state(self):
+        return self.get_measurements()
 
     def move(self, v_left, v_right, dt):
         dx = math.cos(self.robot.heading) / 2.0 * (v_left + v_right)
@@ -60,50 +60,19 @@ class AlicaBot(object):
         else:
             return 1
 
-    def visualize(self, title, measurements, sleep_time):
-        plt.clf()
-        fig = plt.gcf()
-        fig.canvas.set_window_title(title)
-        ix = int(self.robot.x * self.simulator.pixels_per_meter)
-        iy = int(self.robot.y * self.simulator.pixels_per_meter)
-        circle1 = plt.Circle((ix, self.simulator.map_height - iy - 1), self.size * self.simulator.pixels_per_meter, color='r')
-        plt.imshow(self.simulator.map)
-        plt.gca().add_artist(circle1)
-        for i in range(len(measurements)):
-            sensor = self.robot.sensors[i]
-            dist = measurements[i]
-
-            dx_left = math.cos(self.robot.heading + sensor.heading - sensor.cone_width / 2)
-            dx_right = math.cos(self.robot.heading + sensor.heading + sensor.cone_width / 2)
-            
-            dy_left = math.sin(self.robot.heading + sensor.heading - sensor.cone_width / 2)
-            dy_right = math.sin(self.robot.heading + sensor.heading + sensor.cone_width / 2)
-
-
-            px = self.robot.x + math.cos(self.robot.heading) * sensor.x - math.sin(self.robot.heading) * sensor.y
-            py = self.robot.y + math.sin(self.robot.heading) * sensor.x + math.cos(self.robot.heading) * sensor.y
-
-            points = [[px * self.simulator.pixels_per_meter, self.simulator.map_height - 1 - py * self.simulator.pixels_per_meter],
-                      [(px + dx_left * dist) * self.simulator.pixels_per_meter, self.simulator.map_height - 1 - (py + dy_left * dist) * self.simulator.pixels_per_meter],
-                      [(px + dx_right * dist) * self.simulator.pixels_per_meter, self.simulator.map_height - 1 - (py + dy_right * dist) * self.simulator.pixels_per_meter]]
-            poly = plt.Polygon(points)
-            plt.gca().add_patch(poly)
-
-        
-        hx = self.robot.x + math.cos(self.robot.heading) * 2.0
-        hy = self.robot.y + math.sin(self.robot.heading) * 2.0
-        plt.plot([self.robot.x * self.simulator.pixels_per_meter, hx * self.simulator.pixels_per_meter],
-                 [self.simulator.map_height - 1 - self.robot.y * self.simulator.pixels_per_meter, self.simulator.map_height - 1 - hy * self.simulator.pixels_per_meter], 'k-')
-
-        plt.pause(sleep_time)
-
 
 class Simulator(object):
-    def __init__(self):
-        self.simulation_steps_per_meter = 100
-        self.simulation_steps_per_radian = 1.0 / math.radians(4)
-        self.map = misc.imread('map.png')
-        self.pixels_per_meter = 100
+    def __init__(self, small=True):
+        if small:
+            self.simulation_steps_per_meter = 10
+            self.map = misc.imread('map_small.png')
+            self.pixels_per_meter = 10
+            self.simulation_steps_per_radian = 1.0 / math.radians(4)
+        else:
+            self.simulation_steps_per_meter = 100
+            self.map = misc.imread('map.png')
+            self.pixels_per_meter = 100
+            self.simulation_steps_per_radian = 1.0 / math.radians(9)
         self.map_height, self.map_width, self.colors = self.map.shape
 
     def collides_circle(self, robot, circle_size):
