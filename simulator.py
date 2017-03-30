@@ -20,7 +20,7 @@ class Robot(object):
         self.sensors = sensors
 
 
-class AlicaBot(object):
+class AliceBot(object):
     def __init__(self, x, y, heading, simulator):
         sensors = [Sensor(0.12, 0.08, 2, math.radians(30), math.radians(45)),
                    Sensor(0.14, 0.04, 2, math.radians(30), math.radians(15)),
@@ -74,6 +74,9 @@ class Simulator(object):
             self.pixels_per_meter = 100
             self.simulation_steps_per_radian = 1.0 / math.radians(9)
         self.map_height, self.map_width, self.colors = self.map.shape
+    
+    def get_bot_handle(self):
+        return AliceBot(1, 1, 0, self)
 
     def collides_circle(self, robot, circle_size):
         x = robot.x

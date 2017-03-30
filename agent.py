@@ -16,8 +16,8 @@ from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.optimizers import SGD , Adam
 import tensorflow as tf
 
-class AI(object):
-    def __init__(self, simulator):
+class Agent(object):
+    def __init__(self, environment):
         self.observers = []
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -39,7 +39,7 @@ class AI(object):
         self.actions = [(1,0), (0,1), (1,1), (-1,-1)]
         self.start_visualization_after = 1000
         self.ai_name = "Alice AI"
-        self.simulator = simulator
+        self.environment = environment
         self.reset()
         self.dt = 0.1
         self.initial_observe = 1000
@@ -54,7 +54,7 @@ class AI(object):
         self.history_size = 10
         self.history = deque()
         for i in range(self.history_size):
-            self.history.append(self.bot.get_measurements())
+            self.history.append(self.bot.get_state())
 
         # Network creation (loading)
         self.model = self.buildmodel()
@@ -64,7 +64,7 @@ class AI(object):
         self.model.compile(loss='mse',optimizer=adam)
 
     def buildmodel(self):
-        shape = (self.history_size * len(self.bot.get_measurements()),)
+        shape = (self.history_size * len(self.bot.get_state()),)
         model = Sequential()
         model.add(Dense(30, input_shape=shape))
         model.add(Activation('relu'))
@@ -83,13 +83,13 @@ class AI(object):
         return a_t
 
     def reset(self):
-        self.bot = simulator.AlicaBot(1, 1, 0, self.simulator)
+        self.bot = self.environment.get_bot_handle()
 
     def train(self):
         try:
             t = 0
             last_error = 0
-            state1 = self.bot.get_measurements()
+            state1 = self.bot.get_state()
             self.history.append(state1)
             if len(self.history) > self.history_size:
                     self.history.popleft()
@@ -102,7 +102,7 @@ class AI(object):
                 v_l, v_r = self.actions[np.argmax(a_t)]
                 r = self.bot.move(v_l, v_r, self.dt)
 
-                state2 = self.bot.get_measurements()
+                state2 = self.bot.get_state()
                 terminal = r < 0
 
                 arr = list(self.history)[1:]

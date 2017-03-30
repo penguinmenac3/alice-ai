@@ -1,5 +1,5 @@
 import simulator
-import ai
+import agent
 import sys
 
 
@@ -14,9 +14,9 @@ def main():
     if (len(sys.argv) > 1) and sys.argv[1] == "small":
         small = True
     my_simulator = simulator.Simulator(small)
-    my_ai = ai.AI(my_simulator)
-    my_ai.train()
-    my_ai.save()
+    my_agent = ai.Agent(my_simulator)
+    my_agent.train()
+    my_agent.save()
 
 if __name__ == "__main__":
     main()
