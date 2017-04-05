@@ -5,10 +5,12 @@ class DatasetCollector(object):
     def __init__(self):
         self.sock = socket.socket()
         self.sock.connect(("127.0.0.1", 2323))
+        self.sock.send("ai\n")
         self.fsock = self.sock.makefile()
         self.out = open("robot.log", "a")
 
     def collect_data(self):
+        print("Recording...")
         while True:
             self.out.write(self.fsock.readline())
             self.out.flush()
