@@ -14,7 +14,7 @@ def main():
     if (len(sys.argv) > 1) and sys.argv[1] == "small":
         small = True
     my_simulator = simulator.Simulator(small)
-    my_agent = ai.Agent(my_simulator)
+    my_agent = agent.Agent(my_simulator)
     my_agent.train()
     my_agent.save()
 

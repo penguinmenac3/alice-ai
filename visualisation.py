@@ -1,10 +1,11 @@
 import numpy as np
 import socket
-import threading
+import time
 import cv2
 import json
 import math
 import sys
+
 
 class NetworkRenderer(object):
     def __init__(self):
@@ -23,7 +24,7 @@ class NetworkRenderer(object):
     def draw_line(self, x1, y1, x2, y2, color, width):
         start = (int(x1 * self.scale), int(self.height - y1 * self.scale))
         end = (int(x2 * self.scale), int(self.height - y2 * self.scale))
-        cv2.line(self.img,start,end,color,width)
+        cv2.line(self.img, start, end, color, width)
 
     def draw_circle(self, x, y, radius, color):
         center = (int(x * self.scale), int(self.height - y * self.scale))
@@ -35,8 +36,8 @@ class NetworkRenderer(object):
             t = [p[0] * self.scale, self.height - p[1] * self.scale]
             transformed.append(t)
         pts = np.array(transformed, np.int32)
-        pts = pts.reshape((-1,1,2))
-        cv2.polylines(self.img,[pts],True,color)
+        pts = pts.reshape((-1, 1, 2))
+        cv2.polylines(self.img, [pts], True, color)
 
     def network_read(self):
         while True:
@@ -50,8 +51,24 @@ class NetworkRenderer(object):
             self.draw_line(rx, ry, rx + math.cos(rt), ry + math.sin(rt), (30, 30, 30), 3)
             for poly in polygons:
                 self.draw_polygon(poly, (200, 100, 100))
-            cv2.imshow("Alice Bot Learner", self.img)
+            cv2.imshow("Alice Bot", self.img)
             cv2.waitKey(1)
 
 
-NetworkRenderer()
+def main():
+    """
+    The main function of the program.
+    """
+    bg = cv2.imread("map.png")
+    while True:
+        try:
+            NetworkRenderer()
+        except KeyboardInterrupt:
+            break
+        except:
+            time.sleep(1)
+            cv2.imshow("Alice Bot", bg)
+            cv2.waitKey(1)
+
+if __name__ == "__main__":
+    main()
