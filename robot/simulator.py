@@ -19,6 +19,12 @@ class Simulator(object):
     def reward(self, robot, robot_size, collison_reward, step_reward):
         x = robot.x
         y = robot.y
+
+        ix = int(x * self.pixels_per_meter)
+        iy = int(y * self.pixels_per_meter)
+        if ix < 0 or ix >= self.map_width or iy < 0 or iy >= self.map_height:
+            return collison_reward
+
         for i in range(int(robot_size * self.pixels_per_meter * 2)):
             for j in range(int(robot_size * self.pixels_per_meter * 2)):
                 ioff = i - int(self.pixels_per_meter * robot_size)
@@ -26,8 +32,9 @@ class Simulator(object):
                 if ioff * ioff + joff * joff < int(robot_size * self.pixels_per_meter) * int(robot_size * self.pixels_per_meter):
                     ix = int(x * self.pixels_per_meter) + ioff
                     iy = int(y * self.pixels_per_meter) + joff
-                    if self.map[self.map_height - iy - 1][ix][0] < 10:
-                        return collison_reward
+                    if 0 <= ix < self.map_width and 0 <= iy < self.map_height:
+                        if self.map[self.map_height - iy - 1][ix][0] < 10:
+                            return collison_reward
         return step_reward
 
     def video(self, robot):
