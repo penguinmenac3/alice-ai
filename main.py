@@ -1,5 +1,8 @@
-import simulator
-import agent
+from robot.robot import AliceBot
+from visualisation.visualisation import VisualisationProvider
+from utilitylearning.agent import Agent
+from utilitylearning.deepqlearning import Trainer
+from utilitylearning.model import Model
 import sys
 
 
@@ -10,13 +13,18 @@ def main():
     Creates an ai and a simulator.
     Trains the ai with the simulator and saves ai state.
     """
-    small = False
-    if (len(sys.argv) > 1) and sys.argv[1] == "small":
-        small = True
-    my_simulator = simulator.Simulator(small)
-    my_agent = agent.Agent(my_simulator)
-    my_agent.train()
-    my_agent.save()
+    mode = "hardware"
+    if (len(sys.argv) > 1):
+        mode = sys.argv[1]
+
+    visualisation = VisualisationProvider()
+    robot = AliceBot(mode, visualisation)
+
+    model = Model(0.001, robot.state_size, 10, len(robot.actions), model_name="deepqlearning")
+    agent = Agent(robot, model)
+    trainer = Trainer(robot, agent, model)
+    trainer.train(plot_error=True)
+    model.save()
 
 if __name__ == "__main__":
     main()
