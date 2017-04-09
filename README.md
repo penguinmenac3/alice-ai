@@ -11,10 +11,10 @@ Reinforce algorithm will be added in the future.
 
 ## Some images
 
-![An image of the simulator](https://github.com/penguinmenac3/alice-ai/images/Alice-Simulator.png)
+![An image of the simulator](https://github.com/penguinmenac3/alice-ai/raw/master/images/Alice-Simulator.png)
 
 
-![An image of the learning curve](https://github.com/penguinmenac3/alice-ai/images/Alice-DeepQLearningCurve.png)
+![An image of the learning curve](https://github.com/penguinmenac3/alice-ai/raw/master/images/Alice-DeepQLearningCurve.png)
 
 ## Installation
 
