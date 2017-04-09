@@ -73,4 +73,4 @@ class Simulator(object):
                         min_val = dist
                         break
 
-        return 0 if min_val == sensor.max_range else min_val
+        return sensor.max_range if min_val == sensor.max_range else min_val
