@@ -45,14 +45,14 @@ class AliceBot(object):
             self.environment = simulator.Simulator()
 
         elif mode == "hardware":
-            x = 0
-            y = 0
+            x = 1
+            y = 1
             heading = 0
             self.environment = hardware.Hardware(sensors, initial_action)
 
         else:
-            x = 0
-            y = 0
+            x = 1
+            y = 1
             heading = 0
             self.environment = recorder.Play(mode, sensors, initial_action)
         self.robot = Robot(x, y, heading, sensors)

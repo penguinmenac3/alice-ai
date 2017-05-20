@@ -22,10 +22,26 @@ TODO
 
 ## Usage
 
+### Running the ai.
+
 ```bash
 python main.py --help
+```
 
+### Running the visualisation
+
+If you do not want to run the visualisation on the same machine as the ai using the --visualisation parameter, you can use this tool to connect to any host where the ai is running.
+
+```bash
 python visualisation/visualisation.py <host>
+```
+
+### Recording data
+
+Record your drives with the real robot to use them for behavioural cloning.
+
+```bash
+python robot/recorder.py <dataset> <host>
 ```
 
 ## Map

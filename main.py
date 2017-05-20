@@ -5,6 +5,7 @@ def show_help():
     print("")
     print("Options and Arguments:")
     print("  -s, --simulation, --simulator    Use a simulation instead of the hardware robot.")
+    print("      --playback=dataset           Playback a record to the ai.")
     print("  -e, --plot_error                 Plot the error as a matplotlib chart.")
     print("  -h, --help                       Show this help.")
     print("  -v, --visualization              Open a visualisation.")
@@ -28,6 +29,8 @@ def main():
             mode = "simulation"
         elif arg == "--hardware":
             mode = "hardware"
+        elif arg.split("=")[0] == "--playback":
+            mode = arg.split("=")[1]
         elif arg == "-e" or arg == "--plot_error":
             plot_error = True
         elif arg == "-v" or arg == "--visualization":

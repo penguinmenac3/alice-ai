@@ -7,7 +7,7 @@ class Play(object):
         self._reward = 0
         self._sensor_state = [0 for i in range(len(sensors))]
         self._action = initial_action
-        self._data = open("data/" + dataset + ".log", "a")
+        self._data = open("robot/data/" + dataset + ".log", "r")
 
     def _tick(self):
         found_sensor = False
@@ -23,7 +23,7 @@ class Play(object):
         if tags[0] == "drive":
             action = []
             for i in range(len(tags) - 1):
-                action.append(float(tags[i + 1]))
+                action.append(float(tags[i + 1]) / 100.0)
             self._action = action
         if tags[0] == "sense":
             sensor_state = []
@@ -36,14 +36,18 @@ class Play(object):
         if self._reward != 0:
             reward = self._reward
             self._reward = 0
+            #print("Reward: " + str(reward))
             return reward
+        #print("Reward: " + str(step_reward))
         return step_reward
 
     def sense(self, robot):
         self._tick()
+        #print("Sensor: " + str(self._sensor_state))
         return self._sensor_state
 
     def action(self, act):
+        #print("Action: " + str(self._action))
         return self._action
 
     def video(self, robot):
@@ -51,12 +55,12 @@ class Play(object):
 
 
 class Record(object):
-    def __init__(self, dataset):
+    def __init__(self, dataset, host):
         self.sock = socket.socket()
-        self.sock.connect(("127.0.0.1", 2323))
+        self.sock.connect((host, 2323))
         self.sock.send("ai\n")
         self.fsock = self.sock.makefile()
-        self.out = open("data/" + dataset + ".log", "a")
+        self.out = open("robot/data/" + dataset + ".log", "a")
 
     def collect_data(self):
         print("Recording...")
@@ -71,7 +75,7 @@ class Record(object):
 
 
 def main():
-    collector = Record(sys.argv[1])
+    collector = Record(sys.argv[1], sys.argv[2])
     try:
         collector.collect_data()
     except KeyboardInterrupt:
