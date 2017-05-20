@@ -3,6 +3,8 @@ import simulator
 import hardware
 import recorder
 
+MAX_SPEED_LEFT = 1
+MAX_SPEED_RIGHT = 1.01
 
 class Sensor(object):
     def __init__(self, x, y, max_range, cone_width, heading):
@@ -29,7 +31,7 @@ class AliceBot(object):
                    Sensor(0.12, -0.08, 2, math.radians(30), math.radians(-45))]  # ,
         # Sensor(-0.15, 0, 2, math.radians(30), math.radians(-180))]
         initial_action = [0, 0]
-        self.actions = [(1, 0), (0, 1), (1, 1), (-1, -1)]
+        self.actions = [(0.5, 0), (0, 0.5), (0.5, 0.5), (-0.3, -0.3)]
         self.action_dimension = 2
 
         self.state_size = len(sensors)
@@ -81,8 +83,8 @@ class AliceBot(object):
 
     def act(self, action, dt=0.1):
         action = self.environment.action(action)
-        v_left = action[0]
-        v_right = action[1]
+        v_left = MAX_SPEED_LEFT * action[0]
+        v_right = MAX_SPEED_RIGHT * action[1]
         dx = math.cos(self.robot.heading) / 2.0 * (v_left + v_right)
         dy = math.sin(self.robot.heading) / 2.0 * (v_left + v_right)
         dtheta = -1.0 / self.wheel_distance * v_left + 1.0 / self.wheel_distance * v_right

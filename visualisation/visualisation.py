@@ -72,6 +72,8 @@ class NetworkRenderer(object):
         self.sock.connect((sys.argv[1], 25555))
         self.fsock = self.sock.makefile()
         self.bg = cv2.imread("../robot/data/map.png")
+        if self.bg is None:
+            self.bg = cv2.imread("robot/data/map.png")
         self.img = None
         self.scale = 100
         self.height, self.width, self.colors = self.bg.shape
@@ -119,6 +121,8 @@ def main():
     The main function of the program.
     """
     bg = cv2.imread("../robot/data/map.png")
+    if bg is None:
+        bg = cv2.imread("robot/data/map.png")
     while True:
         try:
             NetworkRenderer()

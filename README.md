@@ -22,4 +22,31 @@ TODO
 
 ## Usage
 
-TODO
+```bash
+python main.py --help
+
+python visualisation/visualisation.py <host>
+```
+
+## Map
+
+The provided map should simulate a small dorm room.
+
+### Normal
+
+1 cm = 1 px
+
+### Small
+
+10cm = 1 px
+
+## Robot data
+
+### Starting position
+
+(x,y) = (1, 1)
+
+### Size
+
+radius = 0.15m
+
