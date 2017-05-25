@@ -33,9 +33,9 @@ class Model(object):
         shape = (history_size * state_size,)
         model = Sequential()
         model.add(Dense(30, input_shape=shape))
-        model.add(Activation('relu'))
+        model.add(Activation('elu'))
         model.add(Dense(30))
-        model.add(Activation('relu'))
+        model.add(Activation('elu'))
         model.add(Dense(action_size))
         return model
 

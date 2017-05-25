@@ -14,6 +14,7 @@ class Trainer(object):
         self.initial_observe = 1000
         self.replay_mem_size = 30000
         self.replay_memory = deque()
+        self.replay_memory_bad = deque()
         self.batch_size = 64
         self.epsilon = 0.05
         self.momentum = 0.0
@@ -26,13 +27,20 @@ class Trainer(object):
         terminal = reward < 0
         hist1 = [item for sublist in list(self.agent.history) for item in sublist]
         hist2 = [item for sublist in arr for item in sublist]
-        self.replay_memory.append((hist1, action, reward, hist2, terminal))
+        if reward >= 0:
+            self.replay_memory.append((hist1, action, reward, hist2, terminal))
+        else:
+            self.replay_memory_bad.append((hist1, action, reward, hist2, terminal))
+
 
         if len(self.replay_memory) > self.replay_mem_size:
             self.replay_memory.popleft()
+        
+        if len(self.replay_memory_bad) > self.replay_mem_size:
+            self.replay_memory_bad.popleft()
 
     def _train_step(self):
-        minibatch = random.sample(self.replay_memory, self.batch_size)
+        minibatch = random.sample(list(self.replay_memory_bad) + list(self.replay_memory), self.batch_size)
         inputs = np.zeros((self.batch_size, self.model.history_size * self.model.state_size))
         targets = np.zeros((inputs.shape[0], self.model.action_size))
 
