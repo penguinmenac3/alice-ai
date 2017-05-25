@@ -17,7 +17,7 @@ def main():
     Creates an ai and a simulator.
     Trains the ai with the simulator and saves ai state.
     """
-    mode = "--hardware"
+    mode = "hardware"
     plot_error = False
     proc = None
     for i in range(len(sys.argv) - 1):

@@ -83,6 +83,7 @@ class AliceBot(object):
 
     def act(self, action, dt=0.1):
         action = self.environment.action(action)
+        #print(action)
         v_left = MAX_SPEED_LEFT * action[0]
         v_right = MAX_SPEED_RIGHT * action[1]
         dx = math.cos(self.robot.heading) / 2.0 * (v_left + v_right)

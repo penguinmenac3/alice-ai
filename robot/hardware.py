@@ -24,10 +24,11 @@ class Hardware(object):
             tags = self.fsock.readline().replace("\n", "").split(" ")
             if tags[0] == "reward":
                 self._reward = int(tags[1])
-            action = []
-            for i in range(len(tags) - 1):
-                action.append(float(tags[i + 1]))
-            self._action = action
+            if tags[0] == "drive":
+                action = []
+                for i in range(len(tags) - 1):
+                    action.append(float(tags[i + 1]))
+                self._action = action
             if tags[0] == "sense":
                 sensor_state = []
                 for i in range(len(tags) - 1):
@@ -49,6 +50,7 @@ class Hardware(object):
         return self._sensor_state
 
     def action(self, act):
+        self.sock.send("drive " + str(int(100.0 * act[0])) + " " + str(int(100.0 * act[1])) + "\n")
         return self._action
 
     def video(self, robot):
