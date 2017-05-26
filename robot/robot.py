@@ -87,9 +87,9 @@ class AliceBot(object):
         #print(action)
         v_left = MAX_SPEED_LEFT * action[0]
         v_right = MAX_SPEED_RIGHT * action[1]
-        print(v_left)
-        print(v_right)
-        print("******************")
+        #print(v_left)
+        #print(v_right)
+        #print("******************")
         v_avg = 1.0 / 2.0 * (v_left + v_right)
         dx = math.cos(self.robot.heading) * v_avg
         dy = math.sin(self.robot.heading) * v_avg

@@ -51,8 +51,9 @@ def main():
 
     model = Model(0.001, robot.state_size, 10, len(robot.actions), model_name="deepqlearning")
     agent = Agent(robot, model)
-    trainer = Trainer(robot, agent, model)
+    trainer = Trainer(robot, agent, model, memory_name="deepqlearning")
     trainer.train(plot_error=plot_error)
+    trainer.save()
     model.save()
     if proc is not None:
         proc.kill()

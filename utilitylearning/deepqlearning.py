@@ -2,17 +2,18 @@ import time
 import random
 from collections import deque
 import numpy as np
+import os
 
 
 class Trainer(object):
-    def __init__(self, bot, agent, model):
+    def __init__(self, bot, agent, model, memory_name="default"):
         self.bot = bot
         self.agent = agent
         self.model = model
 
         self.dt = 0.1
         self.initial_observe = 1000
-        self.replay_mem_size = 30000
+        self.replay_mem_size = 60000
         self.replay_memory = deque()
         self.replay_memory_bad = deque()
         self.batch_size = 64
@@ -20,6 +21,21 @@ class Trainer(object):
         self.momentum = 0.0
         self.l2_decay = 0.01
         self.gamma = 0.7
+
+        self.memory_name = memory_name
+
+        if os.path.isfile(memory_name + ".npz"):
+            data = dict(np.load(memory_name + ".npz"))["arr_0"][()]
+            self.replay_memory = deque(data["replay_memory"])
+            self.replay_memory_bad = deque(data["replay_memory_bad"])
+            print()
+
+    def save(self):
+        data = {}
+        data["replay_memory"] = list(self.replay_memory)
+        data["replay_memory_bad"] = list(self.replay_memory_bad)
+        np.savez(self.memory_name, data)
+        print("Saved trainer memory.")
 
     def _add_to_replay_memory(self, state, action, reward):
         arr = list(self.agent.history)[1:]
@@ -69,7 +85,7 @@ class Trainer(object):
             import matplotlib.pyplot as plt
             plt.ion()
         try:
-            t = 0
+            t = max(0, len(self.replay_memory))
             last_error = 0
             state = self.bot.get_state()
             print("Start training, stop with CTRL + C")

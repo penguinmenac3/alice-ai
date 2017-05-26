@@ -28,7 +28,7 @@ class Hardware(object):
                 action = []
                 for i in range(len(tags) - 1):
                     action.append(float(tags[i + 1]) / 100.0)
-                print(action)
+                #print(action)
                 self._action = action
             if tags[0] == "sense":
                 sensor_state = []
