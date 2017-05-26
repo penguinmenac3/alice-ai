@@ -3,8 +3,9 @@ import simulator
 import hardware
 import recorder
 
-MAX_SPEED_LEFT = 1
-MAX_SPEED_RIGHT = 1.01
+MAX_SPEED_LEFT = 0.1142 * 2
+MAX_SPEED_RIGHT = 0.1142 * 2
+WHEELBASE = 0.2
 
 class Sensor(object):
     def __init__(self, x, y, max_range, cone_width, heading):
@@ -56,7 +57,7 @@ class AliceBot(object):
             heading = 0
             self.environment = recorder.Play(mode, sensors, initial_action)
         self.robot = Robot(x, y, heading, sensors)
-        self.wheel_distance = 0.2
+        self.wheel_distance = WHEELBASE
         self.size = 0.15
         self.mode = mode
 
@@ -86,9 +87,13 @@ class AliceBot(object):
         #print(action)
         v_left = MAX_SPEED_LEFT * action[0]
         v_right = MAX_SPEED_RIGHT * action[1]
-        dx = math.cos(self.robot.heading) / 2.0 * (v_left + v_right)
-        dy = math.sin(self.robot.heading) / 2.0 * (v_left + v_right)
-        dtheta = -1.0 / self.wheel_distance * v_left + 1.0 / self.wheel_distance * v_right
+        print(v_left)
+        print(v_right)
+        print("******************")
+        v_avg = 1.0 / 2.0 * (v_left + v_right)
+        dx = math.cos(self.robot.heading) * v_avg
+        dy = math.sin(self.robot.heading) * v_avg
+        dtheta = 1.0 / self.wheel_distance * (v_right - v_left)
 
         self.robot.x += dx * dt
         self.robot.y += dy * dt

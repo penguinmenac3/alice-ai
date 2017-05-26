@@ -4,7 +4,7 @@ import cv2
 
 
 class Hardware(object):
-    def __init__(self, sensors, initial_action, host="127.0.0.1", port=2323):
+    def __init__(self, sensors, initial_action, host="192.168.23.1", port=2323):
         self.sock = socket.socket()
         self.sock.connect((host, port))
         self.sock.send("ai\n")
@@ -27,7 +27,8 @@ class Hardware(object):
             if tags[0] == "drive":
                 action = []
                 for i in range(len(tags) - 1):
-                    action.append(float(tags[i + 1]))
+                    action.append(float(tags[i + 1]) / 100.0)
+                print(action)
                 self._action = action
             if tags[0] == "sense":
                 sensor_state = []
