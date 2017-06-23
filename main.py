@@ -4,7 +4,6 @@ def show_help():
     print("usage: python main.py [OPTION]")
     print("")
     print("Options and Arguments:")
-    print("  -s, --simulation, --simulator    Use a simulation instead of the hardware robot.")
     print("      --playback=dataset           Playback a record to the ai.")
     print("  -e, --plot_error                 Plot the error as a matplotlib chart.")
     print("  -h, --help                       Show this help.")
@@ -25,8 +24,6 @@ def main():
         if arg == "--help" or arg == "-h":
             show_help()
             return
-        elif arg == "-s" or arg == "--simulation" or arg == "--simulator":
-            mode = "simulation"
         elif arg == "--hardware":
             mode = "hardware"
         elif arg.split("=")[0] == "--playback":

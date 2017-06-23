@@ -4,7 +4,7 @@ import cv2
 
 
 class Hardware(object):
-    def __init__(self, sensors, initial_action, host="192.168.23.1", port=2323):
+    def __init__(self, sensors, initial_action, host="localhost", port=2323):
         self.sock = socket.socket()
         self.sock.connect((host, port))
         self.sock.send("ai\n")
@@ -24,17 +24,20 @@ class Hardware(object):
             tags = self.fsock.readline().replace("\n", "").split(" ")
             if tags[0] == "reward":
                 self._reward = int(tags[1])
+                print(self._reward)
             if tags[0] == "drive":
                 action = []
                 for i in range(len(tags) - 1):
                     action.append(float(tags[i + 1]) / 100.0)
                 #print(action)
                 self._action = action
+                print(self._action)
             if tags[0] == "sense":
                 sensor_state = []
                 for i in range(len(tags) - 1):
                     sensor_state.append(float(tags[i + 1]))
                 self._sensor_state = sensor_state
+                print(self._sensor_state)
 
     def stop(self):
         self.fsock.close()

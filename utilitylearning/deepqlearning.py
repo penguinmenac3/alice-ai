@@ -122,7 +122,6 @@ class Trainer(object):
                         plt.plot(stats)
                         plt.pause(0.001)
                     print("Reset: " + str(t) + ", error free: " + str(t - last_error))
-                    self.bot.reset()
                     self.agent.clear_history()
                     last_error = t
 

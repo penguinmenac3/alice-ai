@@ -1,5 +1,4 @@
 import math
-import simulator
 import hardware
 import recorder
 
@@ -31,21 +30,15 @@ class AliceBot(object):
                    Sensor(0.14, -0.04, 2, math.radians(30), math.radians(-15)),
                    Sensor(0.12, -0.08, 2, math.radians(30), math.radians(-45))]  # ,
         # Sensor(-0.15, 0, 2, math.radians(30), math.radians(-180))]
-        initial_action = [0, 0]
-        self.actions = [(0.5, 0), (0, 0.5), (0.5, 0.5), (-0.3, -0.3)]
+        initial_action = [0.2, 0]
+        self.actions = [(0.2, -2), (0.2, 0), (0.2, 2)]
         self.action_dimension = 2
 
         self.state_size = len(sensors)
 
         self.visualisation = visualisation
 
-        if mode == "simulation":
-            x = 1
-            y = 1
-            heading = 0
-            self.environment = simulator.Simulator()
-
-        elif mode == "hardware":
+        if mode == "hardware":
             x = 1
             y = 1
             heading = 0
@@ -72,10 +65,6 @@ class AliceBot(object):
 
     def get_pose(self):
         return [self.robot.x, self.robot.y, self.robot.heading]
-
-    def reset(self):
-        if self.mode == "simulation":
-            self.set_pose(1, 1, 0)
 
     def set_pose(self, x, y, heading):
         self.robot.x = x
