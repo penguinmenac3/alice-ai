@@ -38,13 +38,11 @@ def main():
             return
 
     from robot.robot import AliceBot
-    from visualisation.visualisation import VisualisationProvider
     from utilitylearning.agent import Agent
     from utilitylearning.deepqlearning import Trainer
     from utilitylearning.model import Model
 
-    visualisation = VisualisationProvider()
-    robot = AliceBot(mode, visualisation)
+    robot = AliceBot(mode)
 
     model = Model(0.001, robot.state_size, 10, len(robot.actions), model_name="deepqlearning")
     agent = Agent(robot, model)

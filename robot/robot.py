@@ -24,19 +24,17 @@ class Robot(object):
 
 
 class AliceBot(object):
-    def __init__(self, mode, visualisation):
+    def __init__(self, mode):
         sensors = [Sensor(0.12, 0.08, 2, math.radians(30), math.radians(45)),
                    Sensor(0.14, 0.04, 2, math.radians(30), math.radians(15)),
                    Sensor(0.14, -0.04, 2, math.radians(30), math.radians(-15)),
                    Sensor(0.12, -0.08, 2, math.radians(30), math.radians(-45))]  # ,
         # Sensor(-0.15, 0, 2, math.radians(30), math.radians(-180))]
-        initial_action = [0.2, 0]
-        self.actions = [(0.2, -2), (0.2, 0), (0.2, 2)]
+        initial_action = [0, 0]
+        self.actions = [(0.5, 0.0), (0.0, 0.5), (0.5, 0.5)]
         self.action_dimension = 2
 
         self.state_size = len(sensors)
-
-        self.visualisation = visualisation
 
         if mode == "hardware":
             x = 1
@@ -72,13 +70,13 @@ class AliceBot(object):
         self.robot.heading = heading
 
     def act(self, action, dt=0.1):
+
+        action = [action[0] * MAX_SPEED_LEFT, action[1] * MAX_SPEED_RIGHT]
+
         action = self.environment.action(action)
-        #print(action)
-        v_left = MAX_SPEED_LEFT * action[0]
-        v_right = MAX_SPEED_RIGHT * action[1]
-        #print(v_left)
-        #print(v_right)
-        #print("******************")
+        v_left = max(-MAX_SPEED_LEFT, min(MAX_SPEED_LEFT, action[0]))
+        v_right = max(-MAX_SPEED_RIGHT, min(MAX_SPEED_RIGHT, action[1]))
+        
         v_avg = 1.0 / 2.0 * (v_left + v_right)
         dx = math.cos(self.robot.heading) * v_avg
         dy = math.sin(self.robot.heading) * v_avg
@@ -92,7 +90,5 @@ class AliceBot(object):
             self.robot.heading -= 2 * math.pi
         while self.robot.heading <= -math.pi:
             self.robot.heading += 2 * math.pi
-
-        self.visualisation.broadcast(self)
 
         return action, self.environment.reward(self.robot, self.size, -100, 1)
