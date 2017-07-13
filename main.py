@@ -7,7 +7,6 @@ def show_help():
     print("      --playback=dataset           Playback a record to the ai.")
     print("  -e, --plot_error                 Plot the error as a matplotlib chart.")
     print("  -h, --help                       Show this help.")
-    print("  -v, --visualization              Open a visualisation.")
 
 def main():
     """
@@ -30,8 +29,6 @@ def main():
             mode = arg.split("=")[1]
         elif arg == "-e" or arg == "--plot_error":
             plot_error = True
-        elif arg == "-v" or arg == "--visualization":
-            proc = subprocess.Popen(["python", "visualisation/visualisation.py", "localhost"])
         else:
             print("Unknown option: " + arg)
             show_help()
