@@ -3,6 +3,7 @@ import random
 from collections import deque
 import numpy as np
 import os
+import cv2
 
 
 class Trainer(object):
@@ -88,6 +89,7 @@ class Trainer(object):
             t = max(0, len(self.replay_memory))
             last_error = 0
             state = self.bot.get_state()
+            img = self.bot.get_video()
             print("Start training, stop with CTRL + C")
             while True:
                 timing_start = time.time()
@@ -102,6 +104,7 @@ class Trainer(object):
                 # Execute the action and observe
                 act, r = self.bot.act(self.bot.actions[np.argmax(action)], self.dt)
                 state = self.bot.get_state()
+                img = self.bot.get_video()
 
                 # Create two entries for the replay memory
                 self._add_to_replay_memory(state, action, r)

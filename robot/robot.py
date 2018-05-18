@@ -1,6 +1,6 @@
 import math
-import hardware
-import recorder
+import robot.hardware
+import robot.recorder
 
 MAX_SPEED_LEFT = 0.1142 * 2
 MAX_SPEED_RIGHT = 0.1142 * 2
@@ -40,13 +40,13 @@ class AliceBot(object):
             x = 1
             y = 1
             heading = 0
-            self.environment = hardware.Hardware(sensors, initial_action)
+            self.environment = robot.hardware.Hardware(sensors, initial_action)
 
         else:
             x = 1
             y = 1
             heading = 0
-            self.environment = recorder.Play(mode, sensors, initial_action)
+            self.environment = robot.recorder.Play(mode, sensors, initial_action)
         self.robot = Robot(x, y, heading, sensors)
         self.wheel_distance = WHEELBASE
         self.size = 0.15
